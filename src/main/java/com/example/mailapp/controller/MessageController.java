@@ -3,6 +3,7 @@ package com.example.mailapp.controller;
 import com.example.mailapp.model.Message;
 import com.example.mailapp.model.dto.MessageDto;
 import com.example.mailapp.service.MessageService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,31 +30,36 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    @Operation(summary = "addMessage")
     @PostMapping
     public ResponseEntity<MessageDto> addMessage(@RequestBody final MessageDto messageDto){
         Message message = messageService.addMessage(Message.from(messageDto));
         return new ResponseEntity<>(MessageDto.from(message), HttpStatus.OK);
     }
 
+    @Operation(summary = "getMessages")
     @GetMapping
-    public ResponseEntity<List<MessageDto>> getMessage(){
+    public ResponseEntity<List<MessageDto>> getMessages(){
         List<Message> messages = messageService.getMessages();
         List<MessageDto> messageDto = messages.stream().map(MessageDto::from).collect(Collectors.toList());
         return new ResponseEntity<>(messageDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "getMessage")
     @GetMapping(value = "{id}")
     public ResponseEntity<MessageDto> getMessage(@PathVariable final Long id){
         Message message = messageService.getMessage(id);
         return new ResponseEntity<>(MessageDto.from(message), HttpStatus.OK);
     }
 
+    @Operation(summary = "deleteMessage")
     @DeleteMapping(value = "{id}")
     public ResponseEntity<MessageDto> deleteMessage(@PathVariable final Long id){
         Message message = messageService.deleteMessage(id);
         return new ResponseEntity<>(MessageDto.from(message), HttpStatus.OK);
     }
 
+    @Operation(summary = "editMessage")
     @PutMapping(value = "{id}")
     public ResponseEntity<MessageDto> editMessage(@PathVariable final Long id, @RequestBody final MessageDto messageDto){
         Message editMessage = messageService.editMessage(id, Message.from(messageDto));
